@@ -57,4 +57,12 @@ For a 7.6V PPM signal:
 - **R2 (to GND)**: 3.3kΩ
 
 Output voltage ≈ **3.13V** — safe for STM32 GPIO.
+## ⚠️ Disclaimer
 
+This project is provided as-is. Always test thoroughly on the ground before flight. The author assumes no responsibility for any damage or injury caused by the use of this software or hardware.
+
+## 🤖 AI Disclosure
+
+This code was developed with the assistance of artificial intelligence tools (including but not limited to code generation and debugging support).
+
+The author has reviewed, tested, and verified all code to ensure it functions as intended. Users are encouraged to review the code themselves before use.
