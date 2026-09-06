@@ -1,0 +1,1212 @@
+
+ppm24tocrossfire.elf:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .isr_vector   00000130  08000000  08000000  00001000  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  1 .text         000007a4  08000130  08000130  00001130  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .rodata       00000000  080008d4  080008d4  0000201c  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  3 .ARM.extab    00000000  080008d4  080008d4  0000201c  2**0
+                  CONTENTS, READONLY
+  4 .ARM          00000000  080008d4  080008d4  0000201c  2**0
+                  CONTENTS, READONLY
+  5 .preinit_array 00000000  080008d4  080008d4  0000201c  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .init_array   00000004  080008d4  080008d4  000018d4  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  7 .fini_array   00000004  080008d8  080008d8  000018d8  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  8 .data         0000001c  20000000  080008dc  00002000  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  9 .bss          0000003c  2000001c  080008f8  0000201c  2**2
+                  ALLOC
+ 10 ._user_heap_stack 00000600  20000058  080008f8  00002058  2**0
+                  ALLOC
+ 11 .ARM.attributes 00000029  00000000  00000000  0000201c  2**0
+                  CONTENTS, READONLY
+ 12 .debug_info   00000500  00000000  00000000  00002045  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 13 .debug_abbrev 000001d7  00000000  00000000  00002545  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 14 .debug_aranges 000000a0  00000000  00000000  00002720  2**3
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 15 .debug_rnglists 00000073  00000000  00000000  000027c0  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 16 .debug_macro  00001ad7  00000000  00000000  00002833  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 17 .debug_line   00000a2e  00000000  00000000  0000430a  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 18 .debug_str    00007967  00000000  00000000  00004d38  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 19 .comment      00000043  00000000  00000000  0000c69f  2**0
+                  CONTENTS, READONLY
+ 20 .debug_frame  000001b4  00000000  00000000  0000c6e4  2**2
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 21 .debug_line_str 0000006e  00000000  00000000  0000c898  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+
+Disassembly of section .text:
+
+08000130 <__do_global_dtors_aux>:
+ 8000130:	b510      	push	{r4, lr}
+ 8000132:	4c05      	ldr	r4, [pc, #20]	@ (8000148 <__do_global_dtors_aux+0x18>)
+ 8000134:	7823      	ldrb	r3, [r4, #0]
+ 8000136:	b933      	cbnz	r3, 8000146 <__do_global_dtors_aux+0x16>
+ 8000138:	4b04      	ldr	r3, [pc, #16]	@ (800014c <__do_global_dtors_aux+0x1c>)
+ 800013a:	b113      	cbz	r3, 8000142 <__do_global_dtors_aux+0x12>
+ 800013c:	4804      	ldr	r0, [pc, #16]	@ (8000150 <__do_global_dtors_aux+0x20>)
+ 800013e:	f3af 8000 	nop.w
+ 8000142:	2301      	movs	r3, #1
+ 8000144:	7023      	strb	r3, [r4, #0]
+ 8000146:	bd10      	pop	{r4, pc}
+ 8000148:	2000001c 	.word	0x2000001c
+ 800014c:	00000000 	.word	0x00000000
+ 8000150:	080008bc 	.word	0x080008bc
+
+08000154 <frame_dummy>:
+ 8000154:	b508      	push	{r3, lr}
+ 8000156:	4b03      	ldr	r3, [pc, #12]	@ (8000164 <frame_dummy+0x10>)
+ 8000158:	b11b      	cbz	r3, 8000162 <frame_dummy+0xe>
+ 800015a:	4903      	ldr	r1, [pc, #12]	@ (8000168 <frame_dummy+0x14>)
+ 800015c:	4803      	ldr	r0, [pc, #12]	@ (800016c <frame_dummy+0x18>)
+ 800015e:	f3af 8000 	nop.w
+ 8000162:	bd08      	pop	{r3, pc}
+ 8000164:	00000000 	.word	0x00000000
+ 8000168:	20000020 	.word	0x20000020
+ 800016c:	080008bc 	.word	0x080008bc
+
+08000170 <main>:
+uint8_t crc8_dvb_s2(uint8_t *data, uint8_t len);
+void delay_ms(uint32_t ms);
+void nop(void);
+
+/* ==================== 主函数 ==================== */
+int main(void) {
+ 8000170:	b580      	push	{r7, lr}
+ 8000172:	b082      	sub	sp, #8
+ 8000174:	af00      	add	r7, sp, #0
+    /* 设置中断向量表偏移（0x08000000 是 Flash 起始地址） */
+    SCB_VTOR = 0x08000000U;
+ 8000176:	4b1f      	ldr	r3, [pc, #124]	@ (80001f4 <main+0x84>)
+ 8000178:	f04f 6200 	mov.w	r2, #134217728	@ 0x8000000
+ 800017c:	601a      	str	r2, [r3, #0]
+
+    SystemClock_Config();
+ 800017e:	f000 f847 	bl	8000210 <SystemClock_Config>
+    GPIO_Init();
+ 8000182:	f000 f89b 	bl	80002bc <GPIO_Init>
+    USART2_Init();
+ 8000186:	f000 f8c3 	bl	8000310 <USART2_Init>
+    TIM4_InputCapture_Init();
+ 800018a:	f000 f8e3 	bl	8000354 <TIM4_InputCapture_Init>
+
+    /* 使能 TIM4 中断：更新中断、CC1 中断、CC2 中断 */
+    TIM4_DIER |= (1U << 0U) | (1U << 1U) | (1U << 2U);
+ 800018e:	4b1a      	ldr	r3, [pc, #104]	@ (80001f8 <main+0x88>)
+ 8000190:	681b      	ldr	r3, [r3, #0]
+ 8000192:	4a19      	ldr	r2, [pc, #100]	@ (80001f8 <main+0x88>)
+ 8000194:	f043 0307 	orr.w	r3, r3, #7
+ 8000198:	6013      	str	r3, [r2, #0]
+
+    /* 使能 TIM4 中断（IRQ 30） */
+    NVIC_ISER0 = (1U << 30U);
+ 800019a:	4b18      	ldr	r3, [pc, #96]	@ (80001fc <main+0x8c>)
+ 800019c:	f04f 4280 	mov.w	r2, #1073741824	@ 0x40000000
+ 80001a0:	601a      	str	r2, [r3, #0]
+
+    /* 使能 TIM4 计数器 */
+    TIM4_CR1 |= 1U;
+ 80001a2:	4b17      	ldr	r3, [pc, #92]	@ (8000200 <main+0x90>)
+ 80001a4:	681b      	ldr	r3, [r3, #0]
+ 80001a6:	4a16      	ldr	r2, [pc, #88]	@ (8000200 <main+0x90>)
+ 80001a8:	f043 0301 	orr.w	r3, r3, #1
+ 80001ac:	6013      	str	r3, [r2, #0]
+
+    while (1) {
+        if (frame_ready) {
+ 80001ae:	4b15      	ldr	r3, [pc, #84]	@ (8000204 <main+0x94>)
+ 80001b0:	781b      	ldrb	r3, [r3, #0]
+ 80001b2:	b2db      	uxtb	r3, r3
+ 80001b4:	2b00      	cmp	r3, #0
+ 80001b6:	d019      	beq.n	80001ec <main+0x7c>
+            frame_ready = 0;
+ 80001b8:	4b12      	ldr	r3, [pc, #72]	@ (8000204 <main+0x94>)
+ 80001ba:	2200      	movs	r2, #0
+ 80001bc:	701a      	strb	r2, [r3, #0]
+            /* 临界区保护 */
+            __disable_irq();
+ 80001be:	b672      	cpsid	i
+            for (int i = 0; i < MAX_PPM_CHANNELS; i++) {
+ 80001c0:	2300      	movs	r3, #0
+ 80001c2:	607b      	str	r3, [r7, #4]
+ 80001c4:	e00a      	b.n	80001dc <main+0x6c>
+                ppm_output[i] = working_vals[i];
+ 80001c6:	4a10      	ldr	r2, [pc, #64]	@ (8000208 <main+0x98>)
+ 80001c8:	687b      	ldr	r3, [r7, #4]
+ 80001ca:	f832 1013 	ldrh.w	r1, [r2, r3, lsl #1]
+ 80001ce:	4a0f      	ldr	r2, [pc, #60]	@ (800020c <main+0x9c>)
+ 80001d0:	687b      	ldr	r3, [r7, #4]
+ 80001d2:	f822 1013 	strh.w	r1, [r2, r3, lsl #1]
+            for (int i = 0; i < MAX_PPM_CHANNELS; i++) {
+ 80001d6:	687b      	ldr	r3, [r7, #4]
+ 80001d8:	3301      	adds	r3, #1
+ 80001da:	607b      	str	r3, [r7, #4]
+ 80001dc:	687b      	ldr	r3, [r7, #4]
+ 80001de:	2b0b      	cmp	r3, #11
+ 80001e0:	ddf1      	ble.n	80001c6 <main+0x56>
+            }
+            __enable_irq();
+ 80001e2:	b662      	cpsie	i
+            send_crsf_frame(ppm_output, MAX_PPM_CHANNELS);
+ 80001e4:	210c      	movs	r1, #12
+ 80001e6:	4809      	ldr	r0, [pc, #36]	@ (800020c <main+0x9c>)
+ 80001e8:	f000 f9f2 	bl	80005d0 <send_crsf_frame>
+        }
+        delay_ms(1);
+ 80001ec:	2001      	movs	r0, #1
+ 80001ee:	f000 faff 	bl	80007f0 <delay_ms>
+        if (frame_ready) {
+ 80001f2:	e7dc      	b.n	80001ae <main+0x3e>
+ 80001f4:	e000ed08 	.word	0xe000ed08
+ 80001f8:	4000080c 	.word	0x4000080c
+ 80001fc:	e000e100 	.word	0xe000e100
+ 8000200:	40000800 	.word	0x40000800
+ 8000204:	2000003a 	.word	0x2000003a
+ 8000208:	2000003c 	.word	0x2000003c
+ 800020c:	20000004 	.word	0x20000004
+
+08000210 <SystemClock_Config>:
+    }
+}
+
+/* ==================== 系统时钟配置 ==================== */
+void SystemClock_Config(void) {
+ 8000210:	b480      	push	{r7}
+ 8000212:	af00      	add	r7, sp, #0
+    /* 使能 HSE（外部 8MHz 晶振） */
+    RCC_CR |= (1U << 16U);
+ 8000214:	4b27      	ldr	r3, [pc, #156]	@ (80002b4 <SystemClock_Config+0xa4>)
+ 8000216:	681b      	ldr	r3, [r3, #0]
+ 8000218:	4a26      	ldr	r2, [pc, #152]	@ (80002b4 <SystemClock_Config+0xa4>)
+ 800021a:	f443 3380 	orr.w	r3, r3, #65536	@ 0x10000
+ 800021e:	6013      	str	r3, [r2, #0]
+    while (!(RCC_CR & (1U << 17U)));
+ 8000220:	bf00      	nop
+ 8000222:	4b24      	ldr	r3, [pc, #144]	@ (80002b4 <SystemClock_Config+0xa4>)
+ 8000224:	681b      	ldr	r3, [r3, #0]
+ 8000226:	f403 3300 	and.w	r3, r3, #131072	@ 0x20000
+ 800022a:	2b00      	cmp	r3, #0
+ 800022c:	d0f9      	beq.n	8000222 <SystemClock_Config+0x12>
+
+    /* 配置 PLL: HSE 作为源，9 倍频 → 72MHz */
+    RCC_CFGR |= (1U << 16U);           /* PLL 源 = HSE */
+ 800022e:	4b22      	ldr	r3, [pc, #136]	@ (80002b8 <SystemClock_Config+0xa8>)
+ 8000230:	681b      	ldr	r3, [r3, #0]
+ 8000232:	4a21      	ldr	r2, [pc, #132]	@ (80002b8 <SystemClock_Config+0xa8>)
+ 8000234:	f443 3380 	orr.w	r3, r3, #65536	@ 0x10000
+ 8000238:	6013      	str	r3, [r2, #0]
+    RCC_CFGR |= (7U << 18U);           /* PLL 倍频 9 (7 对应 9) */
+ 800023a:	4b1f      	ldr	r3, [pc, #124]	@ (80002b8 <SystemClock_Config+0xa8>)
+ 800023c:	681b      	ldr	r3, [r3, #0]
+ 800023e:	4a1e      	ldr	r2, [pc, #120]	@ (80002b8 <SystemClock_Config+0xa8>)
+ 8000240:	f443 13e0 	orr.w	r3, r3, #1835008	@ 0x1c0000
+ 8000244:	6013      	str	r3, [r2, #0]
+    RCC_CFGR |= (1U << 17U);           /* PLL 预分频 = 1 */
+ 8000246:	4b1c      	ldr	r3, [pc, #112]	@ (80002b8 <SystemClock_Config+0xa8>)
+ 8000248:	681b      	ldr	r3, [r3, #0]
+ 800024a:	4a1b      	ldr	r2, [pc, #108]	@ (80002b8 <SystemClock_Config+0xa8>)
+ 800024c:	f443 3300 	orr.w	r3, r3, #131072	@ 0x20000
+ 8000250:	6013      	str	r3, [r2, #0]
+
+    /* 使能 PLL */
+    RCC_CR |= (1U << 24U);
+ 8000252:	4b18      	ldr	r3, [pc, #96]	@ (80002b4 <SystemClock_Config+0xa4>)
+ 8000254:	681b      	ldr	r3, [r3, #0]
+ 8000256:	4a17      	ldr	r2, [pc, #92]	@ (80002b4 <SystemClock_Config+0xa4>)
+ 8000258:	f043 7380 	orr.w	r3, r3, #16777216	@ 0x1000000
+ 800025c:	6013      	str	r3, [r2, #0]
+    while (!(RCC_CR & (1U << 25U)));
+ 800025e:	bf00      	nop
+ 8000260:	4b14      	ldr	r3, [pc, #80]	@ (80002b4 <SystemClock_Config+0xa4>)
+ 8000262:	681b      	ldr	r3, [r3, #0]
+ 8000264:	f003 7300 	and.w	r3, r3, #33554432	@ 0x2000000
+ 8000268:	2b00      	cmp	r3, #0
+ 800026a:	d0f9      	beq.n	8000260 <SystemClock_Config+0x50>
+
+    /* 配置总线分频 */
+    RCC_CFGR &= ~(0xF << 4U);          /* AHB = SYSCLK / 1 */
+ 800026c:	4b12      	ldr	r3, [pc, #72]	@ (80002b8 <SystemClock_Config+0xa8>)
+ 800026e:	681b      	ldr	r3, [r3, #0]
+ 8000270:	4a11      	ldr	r2, [pc, #68]	@ (80002b8 <SystemClock_Config+0xa8>)
+ 8000272:	f023 03f0 	bic.w	r3, r3, #240	@ 0xf0
+ 8000276:	6013      	str	r3, [r2, #0]
+    RCC_CFGR |= (4U << 8U);            /* APB1 = HCLK / 2 (36MHz) */
+ 8000278:	4b0f      	ldr	r3, [pc, #60]	@ (80002b8 <SystemClock_Config+0xa8>)
+ 800027a:	681b      	ldr	r3, [r3, #0]
+ 800027c:	4a0e      	ldr	r2, [pc, #56]	@ (80002b8 <SystemClock_Config+0xa8>)
+ 800027e:	f443 6380 	orr.w	r3, r3, #1024	@ 0x400
+ 8000282:	6013      	str	r3, [r2, #0]
+    RCC_CFGR &= ~(0x7 << 11U);         /* APB2 = HCLK / 1 (72MHz) */
+ 8000284:	4b0c      	ldr	r3, [pc, #48]	@ (80002b8 <SystemClock_Config+0xa8>)
+ 8000286:	681b      	ldr	r3, [r3, #0]
+ 8000288:	4a0b      	ldr	r2, [pc, #44]	@ (80002b8 <SystemClock_Config+0xa8>)
+ 800028a:	f423 5360 	bic.w	r3, r3, #14336	@ 0x3800
+ 800028e:	6013      	str	r3, [r2, #0]
+
+    /* 切换到 PLL 作为系统时钟 */
+    RCC_CFGR |= (2U << 0U);
+ 8000290:	4b09      	ldr	r3, [pc, #36]	@ (80002b8 <SystemClock_Config+0xa8>)
+ 8000292:	681b      	ldr	r3, [r3, #0]
+ 8000294:	4a08      	ldr	r2, [pc, #32]	@ (80002b8 <SystemClock_Config+0xa8>)
+ 8000296:	f043 0302 	orr.w	r3, r3, #2
+ 800029a:	6013      	str	r3, [r2, #0]
+    while ((RCC_CFGR & (3U << 2U)) != (2U << 2U));
+ 800029c:	bf00      	nop
+ 800029e:	4b06      	ldr	r3, [pc, #24]	@ (80002b8 <SystemClock_Config+0xa8>)
+ 80002a0:	681b      	ldr	r3, [r3, #0]
+ 80002a2:	f003 030c 	and.w	r3, r3, #12
+ 80002a6:	2b08      	cmp	r3, #8
+ 80002a8:	d1f9      	bne.n	800029e <SystemClock_Config+0x8e>
+}
+ 80002aa:	bf00      	nop
+ 80002ac:	bf00      	nop
+ 80002ae:	46bd      	mov	sp, r7
+ 80002b0:	bc80      	pop	{r7}
+ 80002b2:	4770      	bx	lr
+ 80002b4:	40021000 	.word	0x40021000
+ 80002b8:	40021004 	.word	0x40021004
+
+080002bc <GPIO_Init>:
+
+/* ==================== GPIO 初始化 ==================== */
+void GPIO_Init(void) {
+ 80002bc:	b480      	push	{r7}
+ 80002be:	af00      	add	r7, sp, #0
+    /* 使能 GPIOA, GPIOB 时钟 (APB2) */
+    RCC_APB2ENR |= (1U << 2U) | (1U << 3U);
+ 80002c0:	4b10      	ldr	r3, [pc, #64]	@ (8000304 <GPIO_Init+0x48>)
+ 80002c2:	681b      	ldr	r3, [r3, #0]
+ 80002c4:	4a0f      	ldr	r2, [pc, #60]	@ (8000304 <GPIO_Init+0x48>)
+ 80002c6:	f043 030c 	orr.w	r3, r3, #12
+ 80002ca:	6013      	str	r3, [r2, #0]
+
+    /* PA2: USART2_TX - 复用推挽输出, 50MHz */
+    GPIOA_CRL &= ~(0xF << (2U * 4U));
+ 80002cc:	4b0e      	ldr	r3, [pc, #56]	@ (8000308 <GPIO_Init+0x4c>)
+ 80002ce:	681b      	ldr	r3, [r3, #0]
+ 80002d0:	4a0d      	ldr	r2, [pc, #52]	@ (8000308 <GPIO_Init+0x4c>)
+ 80002d2:	f423 6370 	bic.w	r3, r3, #3840	@ 0xf00
+ 80002d6:	6013      	str	r3, [r2, #0]
+    GPIOA_CRL |= (0xB << (2U * 4U));
+ 80002d8:	4b0b      	ldr	r3, [pc, #44]	@ (8000308 <GPIO_Init+0x4c>)
+ 80002da:	681b      	ldr	r3, [r3, #0]
+ 80002dc:	4a0a      	ldr	r2, [pc, #40]	@ (8000308 <GPIO_Init+0x4c>)
+ 80002de:	f443 6330 	orr.w	r3, r3, #2816	@ 0xb00
+ 80002e2:	6013      	str	r3, [r2, #0]
+
+    /* PB6: TIM4_CH1 - 输入捕获, 浮空输入 */
+    GPIOB_CRL &= ~(0xF << (6U * 4U));
+ 80002e4:	4b09      	ldr	r3, [pc, #36]	@ (800030c <GPIO_Init+0x50>)
+ 80002e6:	681b      	ldr	r3, [r3, #0]
+ 80002e8:	4a08      	ldr	r2, [pc, #32]	@ (800030c <GPIO_Init+0x50>)
+ 80002ea:	f023 6370 	bic.w	r3, r3, #251658240	@ 0xf000000
+ 80002ee:	6013      	str	r3, [r2, #0]
+    GPIOB_CRL |= (0x4 << (6U * 4U));
+ 80002f0:	4b06      	ldr	r3, [pc, #24]	@ (800030c <GPIO_Init+0x50>)
+ 80002f2:	681b      	ldr	r3, [r3, #0]
+ 80002f4:	4a05      	ldr	r2, [pc, #20]	@ (800030c <GPIO_Init+0x50>)
+ 80002f6:	f043 6380 	orr.w	r3, r3, #67108864	@ 0x4000000
+ 80002fa:	6013      	str	r3, [r2, #0]
+}
+ 80002fc:	bf00      	nop
+ 80002fe:	46bd      	mov	sp, r7
+ 8000300:	bc80      	pop	{r7}
+ 8000302:	4770      	bx	lr
+ 8000304:	40021018 	.word	0x40021018
+ 8000308:	40010800 	.word	0x40010800
+ 800030c:	40010c00 	.word	0x40010c00
+
+08000310 <USART2_Init>:
+
+/* ==================== USART2 初始化 ==================== */
+void USART2_Init(void) {
+ 8000310:	b480      	push	{r7}
+ 8000312:	af00      	add	r7, sp, #0
+    /* 使能 USART2 时钟 (APB1) */
+    RCC_APB1ENR |= (1U << 17U);
+ 8000314:	4b0c      	ldr	r3, [pc, #48]	@ (8000348 <USART2_Init+0x38>)
+ 8000316:	681b      	ldr	r3, [r3, #0]
+ 8000318:	4a0b      	ldr	r2, [pc, #44]	@ (8000348 <USART2_Init+0x38>)
+ 800031a:	f443 3300 	orr.w	r3, r3, #131072	@ 0x20000
+ 800031e:	6013      	str	r3, [r2, #0]
+
+    /* 波特率: 72000000 / (16 * 420000) ≈ 10.714 → 11 */
+    USART2_BRR = 11;
+ 8000320:	4b0a      	ldr	r3, [pc, #40]	@ (800034c <USART2_Init+0x3c>)
+ 8000322:	220b      	movs	r2, #11
+ 8000324:	601a      	str	r2, [r3, #0]
+
+    /* 使能发送 (TE=bit3), 使能接收 (RE=bit2) */
+    USART2_CR1 |= (1U << 3U) | (1U << 2U);
+ 8000326:	4b0a      	ldr	r3, [pc, #40]	@ (8000350 <USART2_Init+0x40>)
+ 8000328:	681b      	ldr	r3, [r3, #0]
+ 800032a:	4a09      	ldr	r2, [pc, #36]	@ (8000350 <USART2_Init+0x40>)
+ 800032c:	f043 030c 	orr.w	r3, r3, #12
+ 8000330:	6013      	str	r3, [r2, #0]
+    /* 使能 USART2 (UE=bit13) */
+    USART2_CR1 |= (1U << 13U);
+ 8000332:	4b07      	ldr	r3, [pc, #28]	@ (8000350 <USART2_Init+0x40>)
+ 8000334:	681b      	ldr	r3, [r3, #0]
+ 8000336:	4a06      	ldr	r2, [pc, #24]	@ (8000350 <USART2_Init+0x40>)
+ 8000338:	f443 5300 	orr.w	r3, r3, #8192	@ 0x2000
+ 800033c:	6013      	str	r3, [r2, #0]
+}
+ 800033e:	bf00      	nop
+ 8000340:	46bd      	mov	sp, r7
+ 8000342:	bc80      	pop	{r7}
+ 8000344:	4770      	bx	lr
+ 8000346:	bf00      	nop
+ 8000348:	4002101c 	.word	0x4002101c
+ 800034c:	40004408 	.word	0x40004408
+ 8000350:	4000440c 	.word	0x4000440c
+
+08000354 <TIM4_InputCapture_Init>:
+
+/* ==================== TIM4 输入捕获初始化 ==================== */
+void TIM4_InputCapture_Init(void) {
+ 8000354:	b480      	push	{r7}
+ 8000356:	af00      	add	r7, sp, #0
+    /* 使能 TIM4 时钟 (APB1) */
+    RCC_APB1ENR |= (1U << 2U);
+ 8000358:	4b26      	ldr	r3, [pc, #152]	@ (80003f4 <TIM4_InputCapture_Init+0xa0>)
+ 800035a:	681b      	ldr	r3, [r3, #0]
+ 800035c:	4a25      	ldr	r2, [pc, #148]	@ (80003f4 <TIM4_InputCapture_Init+0xa0>)
+ 800035e:	f043 0304 	orr.w	r3, r3, #4
+ 8000362:	6013      	str	r3, [r2, #0]
+
+    /* 预分频器: 72MHz / 72 = 1MHz (每微秒加 1) */
+    TIM4_PSC = 71U;
+ 8000364:	4b24      	ldr	r3, [pc, #144]	@ (80003f8 <TIM4_InputCapture_Init+0xa4>)
+ 8000366:	2247      	movs	r2, #71	@ 0x47
+ 8000368:	601a      	str	r2, [r3, #0]
+    /* 自动重装载值: 最大 */
+    TIM4_ARR = 0xFFFFU;
+ 800036a:	4b24      	ldr	r3, [pc, #144]	@ (80003fc <TIM4_InputCapture_Init+0xa8>)
+ 800036c:	f64f 72ff 	movw	r2, #65535	@ 0xffff
+ 8000370:	601a      	str	r2, [r3, #0]
+
+    /* 通道1: 输入捕获, 直接 TI1 */
+    TIM4_CCMR1 |= (1U << 0U) | (1U << 1U);   /* CC1S = 01 */
+ 8000372:	4b23      	ldr	r3, [pc, #140]	@ (8000400 <TIM4_InputCapture_Init+0xac>)
+ 8000374:	681b      	ldr	r3, [r3, #0]
+ 8000376:	4a22      	ldr	r2, [pc, #136]	@ (8000400 <TIM4_InputCapture_Init+0xac>)
+ 8000378:	f043 0303 	orr.w	r3, r3, #3
+ 800037c:	6013      	str	r3, [r2, #0]
+    TIM4_CCMR1 &= ~(1U << 2U);               /* IC1PSC = 00 */
+ 800037e:	4b20      	ldr	r3, [pc, #128]	@ (8000400 <TIM4_InputCapture_Init+0xac>)
+ 8000380:	681b      	ldr	r3, [r3, #0]
+ 8000382:	4a1f      	ldr	r2, [pc, #124]	@ (8000400 <TIM4_InputCapture_Init+0xac>)
+ 8000384:	f023 0304 	bic.w	r3, r3, #4
+ 8000388:	6013      	str	r3, [r2, #0]
+    TIM4_CCMR1 &= ~(0xF << 4U);              /* IC1F = 0 */
+ 800038a:	4b1d      	ldr	r3, [pc, #116]	@ (8000400 <TIM4_InputCapture_Init+0xac>)
+ 800038c:	681b      	ldr	r3, [r3, #0]
+ 800038e:	4a1c      	ldr	r2, [pc, #112]	@ (8000400 <TIM4_InputCapture_Init+0xac>)
+ 8000390:	f023 03f0 	bic.w	r3, r3, #240	@ 0xf0
+ 8000394:	6013      	str	r3, [r2, #0]
+
+    /* 通道2: 输入捕获, 间接 TI1FP2 (用于测暂停) */
+    TIM4_CCMR1 |= (2U << 8U);                /* CC2S = 10 */
+ 8000396:	4b1a      	ldr	r3, [pc, #104]	@ (8000400 <TIM4_InputCapture_Init+0xac>)
+ 8000398:	681b      	ldr	r3, [r3, #0]
+ 800039a:	4a19      	ldr	r2, [pc, #100]	@ (8000400 <TIM4_InputCapture_Init+0xac>)
+ 800039c:	f443 7300 	orr.w	r3, r3, #512	@ 0x200
+ 80003a0:	6013      	str	r3, [r2, #0]
+    TIM4_CCMR1 &= ~(1U << 10U);              /* IC2PSC = 00 */
+ 80003a2:	4b17      	ldr	r3, [pc, #92]	@ (8000400 <TIM4_InputCapture_Init+0xac>)
+ 80003a4:	681b      	ldr	r3, [r3, #0]
+ 80003a6:	4a16      	ldr	r2, [pc, #88]	@ (8000400 <TIM4_InputCapture_Init+0xac>)
+ 80003a8:	f423 6380 	bic.w	r3, r3, #1024	@ 0x400
+ 80003ac:	6013      	str	r3, [r2, #0]
+    TIM4_CCMR1 &= ~(0xF << 12U);             /* IC2F = 0 */
+ 80003ae:	4b14      	ldr	r3, [pc, #80]	@ (8000400 <TIM4_InputCapture_Init+0xac>)
+ 80003b0:	681b      	ldr	r3, [r3, #0]
+ 80003b2:	4a13      	ldr	r2, [pc, #76]	@ (8000400 <TIM4_InputCapture_Init+0xac>)
+ 80003b4:	f423 4370 	bic.w	r3, r3, #61440	@ 0xf000
+ 80003b8:	6013      	str	r3, [r2, #0]
+
+    /* 使能捕获通道1和通道2 */
+    TIM4_CCER |= (1U << 0U) | (1U << 4U);    /* CC1E=1, CC2E=1 */
+ 80003ba:	4b12      	ldr	r3, [pc, #72]	@ (8000404 <TIM4_InputCapture_Init+0xb0>)
+ 80003bc:	681b      	ldr	r3, [r3, #0]
+ 80003be:	4a11      	ldr	r2, [pc, #68]	@ (8000404 <TIM4_InputCapture_Init+0xb0>)
+ 80003c0:	f043 0311 	orr.w	r3, r3, #17
+ 80003c4:	6013      	str	r3, [r2, #0]
+    TIM4_CCER &= ~((1U << 1U) | (1U << 5U)); /* CC1P=0, CC2P=0 (上升沿) */
+ 80003c6:	4b0f      	ldr	r3, [pc, #60]	@ (8000404 <TIM4_InputCapture_Init+0xb0>)
+ 80003c8:	681b      	ldr	r3, [r3, #0]
+ 80003ca:	4a0e      	ldr	r2, [pc, #56]	@ (8000404 <TIM4_InputCapture_Init+0xb0>)
+ 80003cc:	f023 0322 	bic.w	r3, r3, #34	@ 0x22
+ 80003d0:	6013      	str	r3, [r2, #0]
+
+    /* 从模式: 复位模式, 触发源 TI1FP1 */
+    TIM4_SMCR |= (4U << 0U);                 /* SMS = 100 (复位模式) */
+ 80003d2:	4b0d      	ldr	r3, [pc, #52]	@ (8000408 <TIM4_InputCapture_Init+0xb4>)
+ 80003d4:	681b      	ldr	r3, [r3, #0]
+ 80003d6:	4a0c      	ldr	r2, [pc, #48]	@ (8000408 <TIM4_InputCapture_Init+0xb4>)
+ 80003d8:	f043 0304 	orr.w	r3, r3, #4
+ 80003dc:	6013      	str	r3, [r2, #0]
+    TIM4_SMCR |= (5U << 4U);                 /* TS = 101 (TI1FP1) */
+ 80003de:	4b0a      	ldr	r3, [pc, #40]	@ (8000408 <TIM4_InputCapture_Init+0xb4>)
+ 80003e0:	681b      	ldr	r3, [r3, #0]
+ 80003e2:	4a09      	ldr	r2, [pc, #36]	@ (8000408 <TIM4_InputCapture_Init+0xb4>)
+ 80003e4:	f043 0350 	orr.w	r3, r3, #80	@ 0x50
+ 80003e8:	6013      	str	r3, [r2, #0]
+}
+ 80003ea:	bf00      	nop
+ 80003ec:	46bd      	mov	sp, r7
+ 80003ee:	bc80      	pop	{r7}
+ 80003f0:	4770      	bx	lr
+ 80003f2:	bf00      	nop
+ 80003f4:	4002101c 	.word	0x4002101c
+ 80003f8:	40000828 	.word	0x40000828
+ 80003fc:	4000082c 	.word	0x4000082c
+ 8000400:	40000818 	.word	0x40000818
+ 8000404:	40000820 	.word	0x40000820
+ 8000408:	40000808 	.word	0x40000808
+
+0800040c <TIM4_IRQHandler>:
+
+/* ==================== TIM4 中断服务程序 ==================== */
+void TIM4_IRQHandler(void) {
+ 800040c:	b480      	push	{r7}
+ 800040e:	b085      	sub	sp, #20
+ 8000410:	af00      	add	r7, sp, #0
+    uint32_t status = TIM4_SR;
+ 8000412:	4b49      	ldr	r3, [pc, #292]	@ (8000538 <TIM4_IRQHandler+0x12c>)
+ 8000414:	681b      	ldr	r3, [r3, #0]
+ 8000416:	60bb      	str	r3, [r7, #8]
+
+    /* CC1 捕获中断 */
+    if (status & (1U << 1U)) {
+ 8000418:	68bb      	ldr	r3, [r7, #8]
+ 800041a:	f003 0302 	and.w	r3, r3, #2
+ 800041e:	2b00      	cmp	r3, #0
+ 8000420:	d07a      	beq.n	8000518 <TIM4_IRQHandler+0x10c>
+        TIM4_SR &= ~(1U << 1U);
+ 8000422:	4b45      	ldr	r3, [pc, #276]	@ (8000538 <TIM4_IRQHandler+0x12c>)
+ 8000424:	681b      	ldr	r3, [r3, #0]
+ 8000426:	4a44      	ldr	r2, [pc, #272]	@ (8000538 <TIM4_IRQHandler+0x12c>)
+ 8000428:	f023 0302 	bic.w	r3, r3, #2
+ 800042c:	6013      	str	r3, [r2, #0]
+
+        uint32_t now = TIM4_CCR1;
+ 800042e:	4b43      	ldr	r3, [pc, #268]	@ (800053c <TIM4_IRQHandler+0x130>)
+ 8000430:	681b      	ldr	r3, [r3, #0]
+ 8000432:	607b      	str	r3, [r7, #4]
+        uint32_t width;
+        if (now >= last_capture) {
+ 8000434:	4b42      	ldr	r3, [pc, #264]	@ (8000540 <TIM4_IRQHandler+0x134>)
+ 8000436:	681b      	ldr	r3, [r3, #0]
+ 8000438:	687a      	ldr	r2, [r7, #4]
+ 800043a:	429a      	cmp	r2, r3
+ 800043c:	d305      	bcc.n	800044a <TIM4_IRQHandler+0x3e>
+            width = now - last_capture;
+ 800043e:	4b40      	ldr	r3, [pc, #256]	@ (8000540 <TIM4_IRQHandler+0x134>)
+ 8000440:	681b      	ldr	r3, [r3, #0]
+ 8000442:	687a      	ldr	r2, [r7, #4]
+ 8000444:	1ad3      	subs	r3, r2, r3
+ 8000446:	60fb      	str	r3, [r7, #12]
+ 8000448:	e007      	b.n	800045a <TIM4_IRQHandler+0x4e>
+        } else {
+            width = 0xFFFFU - last_capture + now;
+ 800044a:	4b3d      	ldr	r3, [pc, #244]	@ (8000540 <TIM4_IRQHandler+0x134>)
+ 800044c:	681b      	ldr	r3, [r3, #0]
+ 800044e:	687a      	ldr	r2, [r7, #4]
+ 8000450:	1ad3      	subs	r3, r2, r3
+ 8000452:	f503 437f 	add.w	r3, r3, #65280	@ 0xff00
+ 8000456:	33ff      	adds	r3, #255	@ 0xff
+ 8000458:	60fb      	str	r3, [r7, #12]
+        }
+        last_capture = now;
+ 800045a:	4a39      	ldr	r2, [pc, #228]	@ (8000540 <TIM4_IRQHandler+0x134>)
+ 800045c:	687b      	ldr	r3, [r7, #4]
+ 800045e:	6013      	str	r3, [r2, #0]
+
+        uint32_t pause = TIM4_CCR2;
+ 8000460:	4b38      	ldr	r3, [pc, #224]	@ (8000544 <TIM4_IRQHandler+0x138>)
+ 8000462:	681b      	ldr	r3, [r3, #0]
+ 8000464:	603b      	str	r3, [r7, #0]
+
+        if (is_first_start) {
+ 8000466:	4b38      	ldr	r3, [pc, #224]	@ (8000548 <TIM4_IRQHandler+0x13c>)
+ 8000468:	781b      	ldrb	r3, [r3, #0]
+ 800046a:	b2db      	uxtb	r3, r3
+ 800046c:	2b00      	cmp	r3, #0
+ 800046e:	d003      	beq.n	8000478 <TIM4_IRQHandler+0x6c>
+            is_first_start = 0;
+ 8000470:	4b35      	ldr	r3, [pc, #212]	@ (8000548 <TIM4_IRQHandler+0x13c>)
+ 8000472:	2200      	movs	r2, #0
+ 8000474:	701a      	strb	r2, [r3, #0]
+            return;
+ 8000476:	e05a      	b.n	800052e <TIM4_IRQHandler+0x122>
+        }
+
+        if (is_in_sync && edge_flag) {
+ 8000478:	4b34      	ldr	r3, [pc, #208]	@ (800054c <TIM4_IRQHandler+0x140>)
+ 800047a:	781b      	ldrb	r3, [r3, #0]
+ 800047c:	b2db      	uxtb	r3, r3
+ 800047e:	2b00      	cmp	r3, #0
+ 8000480:	d034      	beq.n	80004ec <TIM4_IRQHandler+0xe0>
+ 8000482:	4b33      	ldr	r3, [pc, #204]	@ (8000550 <TIM4_IRQHandler+0x144>)
+ 8000484:	781b      	ldrb	r3, [r3, #0]
+ 8000486:	b2db      	uxtb	r3, r3
+ 8000488:	2b00      	cmp	r3, #0
+ 800048a:	d02f      	beq.n	80004ec <TIM4_IRQHandler+0xe0>
+            /* 检测同步脉冲: 信号宽度 > 4000us 且 暂停宽度约 300us */
+            if (width >= SYNC_THRESHOLD_US && (pause > 250U && pause < 350U)) {
+ 800048c:	68fb      	ldr	r3, [r7, #12]
+ 800048e:	f5b3 6f7a 	cmp.w	r3, #4000	@ 0xfa0
+ 8000492:	d30d      	bcc.n	80004b0 <TIM4_IRQHandler+0xa4>
+ 8000494:	683b      	ldr	r3, [r7, #0]
+ 8000496:	2bfa      	cmp	r3, #250	@ 0xfa
+ 8000498:	d90a      	bls.n	80004b0 <TIM4_IRQHandler+0xa4>
+ 800049a:	683b      	ldr	r3, [r7, #0]
+ 800049c:	f5b3 7faf 	cmp.w	r3, #350	@ 0x15e
+ 80004a0:	d206      	bcs.n	80004b0 <TIM4_IRQHandler+0xa4>
+                current_channel = 0;
+ 80004a2:	4b2c      	ldr	r3, [pc, #176]	@ (8000554 <TIM4_IRQHandler+0x148>)
+ 80004a4:	2200      	movs	r2, #0
+ 80004a6:	701a      	strb	r2, [r3, #0]
+                is_in_sync = 0;
+ 80004a8:	4b28      	ldr	r3, [pc, #160]	@ (800054c <TIM4_IRQHandler+0x140>)
+ 80004aa:	2200      	movs	r2, #0
+ 80004ac:	701a      	strb	r2, [r3, #0]
+ 80004ae:	e01d      	b.n	80004ec <TIM4_IRQHandler+0xe0>
+            } else if (width > pause && width < 2500U) {
+ 80004b0:	68fa      	ldr	r2, [r7, #12]
+ 80004b2:	683b      	ldr	r3, [r7, #0]
+ 80004b4:	429a      	cmp	r2, r3
+ 80004b6:	d919      	bls.n	80004ec <TIM4_IRQHandler+0xe0>
+ 80004b8:	68fb      	ldr	r3, [r7, #12]
+ 80004ba:	f640 12c3 	movw	r2, #2499	@ 0x9c3
+ 80004be:	4293      	cmp	r3, r2
+ 80004c0:	d814      	bhi.n	80004ec <TIM4_IRQHandler+0xe0>
+                if (current_channel < MAX_PPM_CHANNELS) {
+ 80004c2:	4b24      	ldr	r3, [pc, #144]	@ (8000554 <TIM4_IRQHandler+0x148>)
+ 80004c4:	781b      	ldrb	r3, [r3, #0]
+ 80004c6:	b2db      	uxtb	r3, r3
+ 80004c8:	2b0b      	cmp	r3, #11
+ 80004ca:	d80f      	bhi.n	80004ec <TIM4_IRQHandler+0xe0>
+                    working_vals[current_channel] = (uint16_t)width;
+ 80004cc:	4b21      	ldr	r3, [pc, #132]	@ (8000554 <TIM4_IRQHandler+0x148>)
+ 80004ce:	781b      	ldrb	r3, [r3, #0]
+ 80004d0:	b2db      	uxtb	r3, r3
+ 80004d2:	461a      	mov	r2, r3
+ 80004d4:	68fb      	ldr	r3, [r7, #12]
+ 80004d6:	b299      	uxth	r1, r3
+ 80004d8:	4b1f      	ldr	r3, [pc, #124]	@ (8000558 <TIM4_IRQHandler+0x14c>)
+ 80004da:	f823 1012 	strh.w	r1, [r3, r2, lsl #1]
+                    current_channel++;
+ 80004de:	4b1d      	ldr	r3, [pc, #116]	@ (8000554 <TIM4_IRQHandler+0x148>)
+ 80004e0:	781b      	ldrb	r3, [r3, #0]
+ 80004e2:	b2db      	uxtb	r3, r3
+ 80004e4:	3301      	adds	r3, #1
+ 80004e6:	b2da      	uxtb	r2, r3
+ 80004e8:	4b1a      	ldr	r3, [pc, #104]	@ (8000554 <TIM4_IRQHandler+0x148>)
+ 80004ea:	701a      	strb	r2, [r3, #0]
+                }
+            }
+        }
+
+        if (current_channel >= MAX_PPM_CHANNELS) {
+ 80004ec:	4b19      	ldr	r3, [pc, #100]	@ (8000554 <TIM4_IRQHandler+0x148>)
+ 80004ee:	781b      	ldrb	r3, [r3, #0]
+ 80004f0:	b2db      	uxtb	r3, r3
+ 80004f2:	2b0b      	cmp	r3, #11
+ 80004f4:	d905      	bls.n	8000502 <TIM4_IRQHandler+0xf6>
+            is_in_sync = 1;
+ 80004f6:	4b15      	ldr	r3, [pc, #84]	@ (800054c <TIM4_IRQHandler+0x140>)
+ 80004f8:	2201      	movs	r2, #1
+ 80004fa:	701a      	strb	r2, [r3, #0]
+            frame_ready = 1;
+ 80004fc:	4b17      	ldr	r3, [pc, #92]	@ (800055c <TIM4_IRQHandler+0x150>)
+ 80004fe:	2201      	movs	r2, #1
+ 8000500:	701a      	strb	r2, [r3, #0]
+        }
+
+        edge_flag = !edge_flag;
+ 8000502:	4b13      	ldr	r3, [pc, #76]	@ (8000550 <TIM4_IRQHandler+0x144>)
+ 8000504:	781b      	ldrb	r3, [r3, #0]
+ 8000506:	b2db      	uxtb	r3, r3
+ 8000508:	2b00      	cmp	r3, #0
+ 800050a:	bf0c      	ite	eq
+ 800050c:	2301      	moveq	r3, #1
+ 800050e:	2300      	movne	r3, #0
+ 8000510:	b2db      	uxtb	r3, r3
+ 8000512:	461a      	mov	r2, r3
+ 8000514:	4b0e      	ldr	r3, [pc, #56]	@ (8000550 <TIM4_IRQHandler+0x144>)
+ 8000516:	701a      	strb	r2, [r3, #0]
+    }
+
+    /* 更新中断（溢出） */
+    if (status & (1U << 0U)) {
+ 8000518:	68bb      	ldr	r3, [r7, #8]
+ 800051a:	f003 0301 	and.w	r3, r3, #1
+ 800051e:	2b00      	cmp	r3, #0
+ 8000520:	d005      	beq.n	800052e <TIM4_IRQHandler+0x122>
+        TIM4_SR &= ~(1U << 0U);
+ 8000522:	4b05      	ldr	r3, [pc, #20]	@ (8000538 <TIM4_IRQHandler+0x12c>)
+ 8000524:	681b      	ldr	r3, [r3, #0]
+ 8000526:	4a04      	ldr	r2, [pc, #16]	@ (8000538 <TIM4_IRQHandler+0x12c>)
+ 8000528:	f023 0301 	bic.w	r3, r3, #1
+ 800052c:	6013      	str	r3, [r2, #0]
+    }
+}
+ 800052e:	3714      	adds	r7, #20
+ 8000530:	46bd      	mov	sp, r7
+ 8000532:	bc80      	pop	{r7}
+ 8000534:	4770      	bx	lr
+ 8000536:	bf00      	nop
+ 8000538:	40000810 	.word	0x40000810
+ 800053c:	40000834 	.word	0x40000834
+ 8000540:	20000054 	.word	0x20000054
+ 8000544:	40000838 	.word	0x40000838
+ 8000548:	20000000 	.word	0x20000000
+ 800054c:	20000039 	.word	0x20000039
+ 8000550:	20000001 	.word	0x20000001
+ 8000554:	20000038 	.word	0x20000038
+ 8000558:	2000003c 	.word	0x2000003c
+ 800055c:	2000003a 	.word	0x2000003a
+
+08000560 <crc8_dvb_s2>:
+
+/* ==================== CRSF 协议封装 ==================== */
+uint8_t crc8_dvb_s2(uint8_t *data, uint8_t len) {
+ 8000560:	b480      	push	{r7}
+ 8000562:	b085      	sub	sp, #20
+ 8000564:	af00      	add	r7, sp, #0
+ 8000566:	6078      	str	r0, [r7, #4]
+ 8000568:	460b      	mov	r3, r1
+ 800056a:	70fb      	strb	r3, [r7, #3]
+    uint8_t crc = 0x00;
+ 800056c:	2300      	movs	r3, #0
+ 800056e:	73fb      	strb	r3, [r7, #15]
+    for (uint8_t i = 0; i < len; i++) {
+ 8000570:	2300      	movs	r3, #0
+ 8000572:	73bb      	strb	r3, [r7, #14]
+ 8000574:	e021      	b.n	80005ba <crc8_dvb_s2+0x5a>
+        crc ^= data[i];
+ 8000576:	7bbb      	ldrb	r3, [r7, #14]
+ 8000578:	687a      	ldr	r2, [r7, #4]
+ 800057a:	4413      	add	r3, r2
+ 800057c:	781a      	ldrb	r2, [r3, #0]
+ 800057e:	7bfb      	ldrb	r3, [r7, #15]
+ 8000580:	4053      	eors	r3, r2
+ 8000582:	73fb      	strb	r3, [r7, #15]
+        for (uint8_t j = 0; j < 8; j++) {
+ 8000584:	2300      	movs	r3, #0
+ 8000586:	737b      	strb	r3, [r7, #13]
+ 8000588:	e011      	b.n	80005ae <crc8_dvb_s2+0x4e>
+            if (crc & 0x80U) {
+ 800058a:	f997 300f 	ldrsb.w	r3, [r7, #15]
+ 800058e:	2b00      	cmp	r3, #0
+ 8000590:	da07      	bge.n	80005a2 <crc8_dvb_s2+0x42>
+                crc = (uint8_t)((crc << 1U) ^ 0xD5U);
+ 8000592:	7bfb      	ldrb	r3, [r7, #15]
+ 8000594:	005b      	lsls	r3, r3, #1
+ 8000596:	b2db      	uxtb	r3, r3
+ 8000598:	f083 032a 	eor.w	r3, r3, #42	@ 0x2a
+ 800059c:	43db      	mvns	r3, r3
+ 800059e:	73fb      	strb	r3, [r7, #15]
+ 80005a0:	e002      	b.n	80005a8 <crc8_dvb_s2+0x48>
+            } else {
+                crc = (uint8_t)(crc << 1U);
+ 80005a2:	7bfb      	ldrb	r3, [r7, #15]
+ 80005a4:	005b      	lsls	r3, r3, #1
+ 80005a6:	73fb      	strb	r3, [r7, #15]
+        for (uint8_t j = 0; j < 8; j++) {
+ 80005a8:	7b7b      	ldrb	r3, [r7, #13]
+ 80005aa:	3301      	adds	r3, #1
+ 80005ac:	737b      	strb	r3, [r7, #13]
+ 80005ae:	7b7b      	ldrb	r3, [r7, #13]
+ 80005b0:	2b07      	cmp	r3, #7
+ 80005b2:	d9ea      	bls.n	800058a <crc8_dvb_s2+0x2a>
+    for (uint8_t i = 0; i < len; i++) {
+ 80005b4:	7bbb      	ldrb	r3, [r7, #14]
+ 80005b6:	3301      	adds	r3, #1
+ 80005b8:	73bb      	strb	r3, [r7, #14]
+ 80005ba:	7bba      	ldrb	r2, [r7, #14]
+ 80005bc:	78fb      	ldrb	r3, [r7, #3]
+ 80005be:	429a      	cmp	r2, r3
+ 80005c0:	d3d9      	bcc.n	8000576 <crc8_dvb_s2+0x16>
+            }
+        }
+    }
+    return crc;
+ 80005c2:	7bfb      	ldrb	r3, [r7, #15]
+}
+ 80005c4:	4618      	mov	r0, r3
+ 80005c6:	3714      	adds	r7, #20
+ 80005c8:	46bd      	mov	sp, r7
+ 80005ca:	bc80      	pop	{r7}
+ 80005cc:	4770      	bx	lr
+	...
+
+080005d0 <send_crsf_frame>:
+
+void send_crsf_frame(uint16_t *channels, uint8_t count) {
+ 80005d0:	b590      	push	{r4, r7, lr}
+ 80005d2:	b09f      	sub	sp, #124	@ 0x7c
+ 80005d4:	af00      	add	r7, sp, #0
+ 80005d6:	6078      	str	r0, [r7, #4]
+ 80005d8:	460b      	mov	r3, r1
+ 80005da:	70fb      	strb	r3, [r7, #3]
+    uint8_t frame[26];
+    uint8_t payload[22] = {0};
+ 80005dc:	f107 0328 	add.w	r3, r7, #40	@ 0x28
+ 80005e0:	2200      	movs	r2, #0
+ 80005e2:	601a      	str	r2, [r3, #0]
+ 80005e4:	605a      	str	r2, [r3, #4]
+ 80005e6:	609a      	str	r2, [r3, #8]
+ 80005e8:	60da      	str	r2, [r3, #12]
+ 80005ea:	611a      	str	r2, [r3, #16]
+ 80005ec:	829a      	strh	r2, [r3, #20]
+    uint16_t crsf_values[CRSF_CHANNEL_COUNT];
+    uint8_t idx = 0, bit_pos = 0;
+ 80005ee:	2300      	movs	r3, #0
+ 80005f0:	f887 3077 	strb.w	r3, [r7, #119]	@ 0x77
+ 80005f4:	2300      	movs	r3, #0
+ 80005f6:	f887 3076 	strb.w	r3, [r7, #118]	@ 0x76
+
+    /* 帧头 */
+    frame[idx++] = CRSF_SYNC_BYTE;
+ 80005fa:	f897 3077 	ldrb.w	r3, [r7, #119]	@ 0x77
+ 80005fe:	1c5a      	adds	r2, r3, #1
+ 8000600:	f887 2077 	strb.w	r2, [r7, #119]	@ 0x77
+ 8000604:	3378      	adds	r3, #120	@ 0x78
+ 8000606:	443b      	add	r3, r7
+ 8000608:	22c8      	movs	r2, #200	@ 0xc8
+ 800060a:	f803 2c38 	strb.w	r2, [r3, #-56]
+    frame[idx++] = CRSF_RC_FRAME_LENGTH;
+ 800060e:	f897 3077 	ldrb.w	r3, [r7, #119]	@ 0x77
+ 8000612:	1c5a      	adds	r2, r3, #1
+ 8000614:	f887 2077 	strb.w	r2, [r7, #119]	@ 0x77
+ 8000618:	3378      	adds	r3, #120	@ 0x78
+ 800061a:	443b      	add	r3, r7
+ 800061c:	2218      	movs	r2, #24
+ 800061e:	f803 2c38 	strb.w	r2, [r3, #-56]
+    frame[idx++] = CRSF_TYPE_RC;
+ 8000622:	f897 3077 	ldrb.w	r3, [r7, #119]	@ 0x77
+ 8000626:	1c5a      	adds	r2, r3, #1
+ 8000628:	f887 2077 	strb.w	r2, [r7, #119]	@ 0x77
+ 800062c:	3378      	adds	r3, #120	@ 0x78
+ 800062e:	443b      	add	r3, r7
+ 8000630:	2216      	movs	r2, #22
+ 8000632:	f803 2c38 	strb.w	r2, [r3, #-56]
+
+    /* 映射 PPM 脉宽到 CRSF 值 (172~1811) */
+    for (int i = 0; i < CRSF_CHANNEL_COUNT; i++) {
+ 8000636:	2300      	movs	r3, #0
+ 8000638:	673b      	str	r3, [r7, #112]	@ 0x70
+ 800063a:	e040      	b.n	80006be <send_crsf_frame+0xee>
+        if (i < count) {
+ 800063c:	78fb      	ldrb	r3, [r7, #3]
+ 800063e:	6f3a      	ldr	r2, [r7, #112]	@ 0x70
+ 8000640:	429a      	cmp	r2, r3
+ 8000642:	da31      	bge.n	80006a8 <send_crsf_frame+0xd8>
+            uint16_t val = channels[i];
+ 8000644:	6f3b      	ldr	r3, [r7, #112]	@ 0x70
+ 8000646:	005b      	lsls	r3, r3, #1
+ 8000648:	687a      	ldr	r2, [r7, #4]
+ 800064a:	4413      	add	r3, r2
+ 800064c:	881b      	ldrh	r3, [r3, #0]
+ 800064e:	f8a7 306e 	strh.w	r3, [r7, #110]	@ 0x6e
+            if (val < 800U) val = 800U;
+ 8000652:	f8b7 306e 	ldrh.w	r3, [r7, #110]	@ 0x6e
+ 8000656:	f5b3 7f48 	cmp.w	r3, #800	@ 0x320
+ 800065a:	d203      	bcs.n	8000664 <send_crsf_frame+0x94>
+ 800065c:	f44f 7348 	mov.w	r3, #800	@ 0x320
+ 8000660:	f8a7 306e 	strh.w	r3, [r7, #110]	@ 0x6e
+            if (val > 2200U) val = 2200U;
+ 8000664:	f8b7 306e 	ldrh.w	r3, [r7, #110]	@ 0x6e
+ 8000668:	f640 0298 	movw	r2, #2200	@ 0x898
+ 800066c:	4293      	cmp	r3, r2
+ 800066e:	d903      	bls.n	8000678 <send_crsf_frame+0xa8>
+ 8000670:	f640 0398 	movw	r3, #2200	@ 0x898
+ 8000674:	f8a7 306e 	strh.w	r3, [r7, #110]	@ 0x6e
+            crsf_values[i] = (uint16_t)(172U + (uint32_t)(val - 800U) * (1811U - 172U) / (2200U - 800U));
+ 8000678:	f8b7 306e 	ldrh.w	r3, [r7, #110]	@ 0x6e
+ 800067c:	f240 6267 	movw	r2, #1639	@ 0x667
+ 8000680:	fb02 f303 	mul.w	r3, r2, r3
+ 8000684:	f5a3 13a0 	sub.w	r3, r3, #1310720	@ 0x140000
+ 8000688:	f5a3 73f0 	sub.w	r3, r3, #480	@ 0x1e0
+ 800068c:	4a55      	ldr	r2, [pc, #340]	@ (80007e4 <send_crsf_frame+0x214>)
+ 800068e:	fba2 2303 	umull	r2, r3, r2, r3
+ 8000692:	0a5b      	lsrs	r3, r3, #9
+ 8000694:	b29b      	uxth	r3, r3
+ 8000696:	33ac      	adds	r3, #172	@ 0xac
+ 8000698:	b29a      	uxth	r2, r3
+ 800069a:	6f3b      	ldr	r3, [r7, #112]	@ 0x70
+ 800069c:	005b      	lsls	r3, r3, #1
+ 800069e:	3378      	adds	r3, #120	@ 0x78
+ 80006a0:	443b      	add	r3, r7
+ 80006a2:	f823 2c70 	strh.w	r2, [r3, #-112]
+ 80006a6:	e007      	b.n	80006b8 <send_crsf_frame+0xe8>
+        } else {
+            crsf_values[i] = 992U;
+ 80006a8:	6f3b      	ldr	r3, [r7, #112]	@ 0x70
+ 80006aa:	005b      	lsls	r3, r3, #1
+ 80006ac:	3378      	adds	r3, #120	@ 0x78
+ 80006ae:	443b      	add	r3, r7
+ 80006b0:	f44f 7278 	mov.w	r2, #992	@ 0x3e0
+ 80006b4:	f823 2c70 	strh.w	r2, [r3, #-112]
+    for (int i = 0; i < CRSF_CHANNEL_COUNT; i++) {
+ 80006b8:	6f3b      	ldr	r3, [r7, #112]	@ 0x70
+ 80006ba:	3301      	adds	r3, #1
+ 80006bc:	673b      	str	r3, [r7, #112]	@ 0x70
+ 80006be:	6f3b      	ldr	r3, [r7, #112]	@ 0x70
+ 80006c0:	2b0f      	cmp	r3, #15
+ 80006c2:	ddbb      	ble.n	800063c <send_crsf_frame+0x6c>
+        }
+    }
+
+    /* 打包 16 个 11 位数据到 22 字节 */
+    for (int i = 0; i < CRSF_CHANNEL_COUNT; i++) {
+ 80006c4:	2300      	movs	r3, #0
+ 80006c6:	66bb      	str	r3, [r7, #104]	@ 0x68
+ 80006c8:	e03c      	b.n	8000744 <send_crsf_frame+0x174>
+        uint16_t val = crsf_values[i] & 0x07FFU;
+ 80006ca:	6ebb      	ldr	r3, [r7, #104]	@ 0x68
+ 80006cc:	005b      	lsls	r3, r3, #1
+ 80006ce:	3378      	adds	r3, #120	@ 0x78
+ 80006d0:	443b      	add	r3, r7
+ 80006d2:	f833 3c70 	ldrh.w	r3, [r3, #-112]
+ 80006d6:	f3c3 030a 	ubfx	r3, r3, #0, #11
+ 80006da:	f8a7 305a 	strh.w	r3, [r7, #90]	@ 0x5a
+        for (int b = 0; b < 11; b++) {
+ 80006de:	2300      	movs	r3, #0
+ 80006e0:	667b      	str	r3, [r7, #100]	@ 0x64
+ 80006e2:	e029      	b.n	8000738 <send_crsf_frame+0x168>
+            if (val & (1U << b)) {
+ 80006e4:	f8b7 205a 	ldrh.w	r2, [r7, #90]	@ 0x5a
+ 80006e8:	6e7b      	ldr	r3, [r7, #100]	@ 0x64
+ 80006ea:	fa22 f303 	lsr.w	r3, r2, r3
+ 80006ee:	f003 0301 	and.w	r3, r3, #1
+ 80006f2:	2b00      	cmp	r3, #0
+ 80006f4:	d018      	beq.n	8000728 <send_crsf_frame+0x158>
+                payload[bit_pos / 8] |= (uint8_t)(1U << (bit_pos % 8));
+ 80006f6:	f897 3076 	ldrb.w	r3, [r7, #118]	@ 0x76
+ 80006fa:	08db      	lsrs	r3, r3, #3
+ 80006fc:	b2d8      	uxtb	r0, r3
+ 80006fe:	4603      	mov	r3, r0
+ 8000700:	3378      	adds	r3, #120	@ 0x78
+ 8000702:	443b      	add	r3, r7
+ 8000704:	f813 2c50 	ldrb.w	r2, [r3, #-80]
+ 8000708:	f897 3076 	ldrb.w	r3, [r7, #118]	@ 0x76
+ 800070c:	f003 0307 	and.w	r3, r3, #7
+ 8000710:	2101      	movs	r1, #1
+ 8000712:	fa01 f303 	lsl.w	r3, r1, r3
+ 8000716:	b2db      	uxtb	r3, r3
+ 8000718:	4601      	mov	r1, r0
+ 800071a:	4313      	orrs	r3, r2
+ 800071c:	b2da      	uxtb	r2, r3
+ 800071e:	f101 0378 	add.w	r3, r1, #120	@ 0x78
+ 8000722:	443b      	add	r3, r7
+ 8000724:	f803 2c50 	strb.w	r2, [r3, #-80]
+            }
+            bit_pos++;
+ 8000728:	f897 3076 	ldrb.w	r3, [r7, #118]	@ 0x76
+ 800072c:	3301      	adds	r3, #1
+ 800072e:	f887 3076 	strb.w	r3, [r7, #118]	@ 0x76
+        for (int b = 0; b < 11; b++) {
+ 8000732:	6e7b      	ldr	r3, [r7, #100]	@ 0x64
+ 8000734:	3301      	adds	r3, #1
+ 8000736:	667b      	str	r3, [r7, #100]	@ 0x64
+ 8000738:	6e7b      	ldr	r3, [r7, #100]	@ 0x64
+ 800073a:	2b0a      	cmp	r3, #10
+ 800073c:	ddd2      	ble.n	80006e4 <send_crsf_frame+0x114>
+    for (int i = 0; i < CRSF_CHANNEL_COUNT; i++) {
+ 800073e:	6ebb      	ldr	r3, [r7, #104]	@ 0x68
+ 8000740:	3301      	adds	r3, #1
+ 8000742:	66bb      	str	r3, [r7, #104]	@ 0x68
+ 8000744:	6ebb      	ldr	r3, [r7, #104]	@ 0x68
+ 8000746:	2b0f      	cmp	r3, #15
+ 8000748:	ddbf      	ble.n	80006ca <send_crsf_frame+0xfa>
+        }
+    }
+
+    /* 复制 payload 到帧 */
+    for (int i = 0; i < 22; i++) {
+ 800074a:	2300      	movs	r3, #0
+ 800074c:	663b      	str	r3, [r7, #96]	@ 0x60
+ 800074e:	e012      	b.n	8000776 <send_crsf_frame+0x1a6>
+        frame[idx++] = payload[i];
+ 8000750:	f897 3077 	ldrb.w	r3, [r7, #119]	@ 0x77
+ 8000754:	1c5a      	adds	r2, r3, #1
+ 8000756:	f887 2077 	strb.w	r2, [r7, #119]	@ 0x77
+ 800075a:	4619      	mov	r1, r3
+ 800075c:	f107 0228 	add.w	r2, r7, #40	@ 0x28
+ 8000760:	6e3b      	ldr	r3, [r7, #96]	@ 0x60
+ 8000762:	4413      	add	r3, r2
+ 8000764:	781a      	ldrb	r2, [r3, #0]
+ 8000766:	f101 0378 	add.w	r3, r1, #120	@ 0x78
+ 800076a:	443b      	add	r3, r7
+ 800076c:	f803 2c38 	strb.w	r2, [r3, #-56]
+    for (int i = 0; i < 22; i++) {
+ 8000770:	6e3b      	ldr	r3, [r7, #96]	@ 0x60
+ 8000772:	3301      	adds	r3, #1
+ 8000774:	663b      	str	r3, [r7, #96]	@ 0x60
+ 8000776:	6e3b      	ldr	r3, [r7, #96]	@ 0x60
+ 8000778:	2b15      	cmp	r3, #21
+ 800077a:	dde9      	ble.n	8000750 <send_crsf_frame+0x180>
+    }
+
+    /* CRC: 从类型字节到 payload 结束 (共 23 字节) */
+    frame[idx] = crc8_dvb_s2(&frame[2], 23);
+ 800077c:	f897 4077 	ldrb.w	r4, [r7, #119]	@ 0x77
+ 8000780:	f107 0340 	add.w	r3, r7, #64	@ 0x40
+ 8000784:	3302      	adds	r3, #2
+ 8000786:	2117      	movs	r1, #23
+ 8000788:	4618      	mov	r0, r3
+ 800078a:	f7ff fee9 	bl	8000560 <crc8_dvb_s2>
+ 800078e:	4603      	mov	r3, r0
+ 8000790:	461a      	mov	r2, r3
+ 8000792:	f104 0378 	add.w	r3, r4, #120	@ 0x78
+ 8000796:	443b      	add	r3, r7
+ 8000798:	f803 2c38 	strb.w	r2, [r3, #-56]
+    idx++;
+ 800079c:	f897 3077 	ldrb.w	r3, [r7, #119]	@ 0x77
+ 80007a0:	3301      	adds	r3, #1
+ 80007a2:	f887 3077 	strb.w	r3, [r7, #119]	@ 0x77
+
+    /* 串口发送 */
+    for (int i = 0; i < idx; i++) {
+ 80007a6:	2300      	movs	r3, #0
+ 80007a8:	65fb      	str	r3, [r7, #92]	@ 0x5c
+ 80007aa:	e010      	b.n	80007ce <send_crsf_frame+0x1fe>
+        while (!(USART2_SR & (1U << 7U)));
+ 80007ac:	bf00      	nop
+ 80007ae:	4b0e      	ldr	r3, [pc, #56]	@ (80007e8 <send_crsf_frame+0x218>)
+ 80007b0:	681b      	ldr	r3, [r3, #0]
+ 80007b2:	f003 0380 	and.w	r3, r3, #128	@ 0x80
+ 80007b6:	2b00      	cmp	r3, #0
+ 80007b8:	d0f9      	beq.n	80007ae <send_crsf_frame+0x1de>
+        USART2_DR = frame[i];
+ 80007ba:	f107 0240 	add.w	r2, r7, #64	@ 0x40
+ 80007be:	6dfb      	ldr	r3, [r7, #92]	@ 0x5c
+ 80007c0:	4413      	add	r3, r2
+ 80007c2:	781a      	ldrb	r2, [r3, #0]
+ 80007c4:	4b09      	ldr	r3, [pc, #36]	@ (80007ec <send_crsf_frame+0x21c>)
+ 80007c6:	601a      	str	r2, [r3, #0]
+    for (int i = 0; i < idx; i++) {
+ 80007c8:	6dfb      	ldr	r3, [r7, #92]	@ 0x5c
+ 80007ca:	3301      	adds	r3, #1
+ 80007cc:	65fb      	str	r3, [r7, #92]	@ 0x5c
+ 80007ce:	f897 3077 	ldrb.w	r3, [r7, #119]	@ 0x77
+ 80007d2:	6dfa      	ldr	r2, [r7, #92]	@ 0x5c
+ 80007d4:	429a      	cmp	r2, r3
+ 80007d6:	dbe9      	blt.n	80007ac <send_crsf_frame+0x1dc>
+    }
+}
+ 80007d8:	bf00      	nop
+ 80007da:	bf00      	nop
+ 80007dc:	377c      	adds	r7, #124	@ 0x7c
+ 80007de:	46bd      	mov	sp, r7
+ 80007e0:	bd90      	pop	{r4, r7, pc}
+ 80007e2:	bf00      	nop
+ 80007e4:	5d9f7391 	.word	0x5d9f7391
+ 80007e8:	40004400 	.word	0x40004400
+ 80007ec:	40004404 	.word	0x40004404
+
+080007f0 <delay_ms>:
+
+/* ==================== 延时函数 ==================== */
+void delay_ms(uint32_t ms) {
+ 80007f0:	b480      	push	{r7}
+ 80007f2:	b085      	sub	sp, #20
+ 80007f4:	af00      	add	r7, sp, #0
+ 80007f6:	6078      	str	r0, [r7, #4]
+    volatile uint32_t count = ms * 72000U;
+ 80007f8:	687b      	ldr	r3, [r7, #4]
+ 80007fa:	4a08      	ldr	r2, [pc, #32]	@ (800081c <delay_ms+0x2c>)
+ 80007fc:	fb02 f303 	mul.w	r3, r2, r3
+ 8000800:	60fb      	str	r3, [r7, #12]
+    while (count--) {
+ 8000802:	e000      	b.n	8000806 <delay_ms+0x16>
+        __asm volatile ("nop");
+ 8000804:	bf00      	nop
+    while (count--) {
+ 8000806:	68fb      	ldr	r3, [r7, #12]
+ 8000808:	1e5a      	subs	r2, r3, #1
+ 800080a:	60fa      	str	r2, [r7, #12]
+ 800080c:	2b00      	cmp	r3, #0
+ 800080e:	d1f9      	bne.n	8000804 <delay_ms+0x14>
+    }
+}
+ 8000810:	bf00      	nop
+ 8000812:	bf00      	nop
+ 8000814:	3714      	adds	r7, #20
+ 8000816:	46bd      	mov	sp, r7
+ 8000818:	bc80      	pop	{r7}
+ 800081a:	4770      	bx	lr
+ 800081c:	00011940 	.word	0x00011940
+
+08000820 <Reset_Handler>:
+
+  .section .text.Reset_Handler
+  .weak Reset_Handler
+  .type Reset_Handler, %function
+Reset_Handler:
+  ldr   r0, =_estack
+ 8000820:	480d      	ldr	r0, [pc, #52]	@ (8000858 <LoopForever+0x2>)
+  mov   sp, r0          /* set stack pointer */
+ 8000822:	4685      	mov	sp, r0
+/* Call the clock system initialization function.*/
+  bl  SystemInit
+ 8000824:	f3af 8000 	nop.w
+
+/* Copy the data segment initializers from flash to SRAM */
+  ldr r0, =_sdata
+ 8000828:	480c      	ldr	r0, [pc, #48]	@ (800085c <LoopForever+0x6>)
+  ldr r1, =_edata
+ 800082a:	490d      	ldr	r1, [pc, #52]	@ (8000860 <LoopForever+0xa>)
+  ldr r2, =_sidata
+ 800082c:	4a0d      	ldr	r2, [pc, #52]	@ (8000864 <LoopForever+0xe>)
+  movs r3, #0
+ 800082e:	2300      	movs	r3, #0
+  b LoopCopyDataInit
+ 8000830:	e002      	b.n	8000838 <LoopCopyDataInit>
+
+08000832 <CopyDataInit>:
+
+CopyDataInit:
+  ldr r4, [r2, r3]
+ 8000832:	58d4      	ldr	r4, [r2, r3]
+  str r4, [r0, r3]
+ 8000834:	50c4      	str	r4, [r0, r3]
+  adds r3, r3, #4
+ 8000836:	3304      	adds	r3, #4
+
+08000838 <LoopCopyDataInit>:
+
+LoopCopyDataInit:
+  adds r4, r0, r3
+ 8000838:	18c4      	adds	r4, r0, r3
+  cmp r4, r1
+ 800083a:	428c      	cmp	r4, r1
+  bcc CopyDataInit
+ 800083c:	d3f9      	bcc.n	8000832 <CopyDataInit>
+
+/* Zero fill the bss segment. */
+  ldr r2, =_sbss
+ 800083e:	4a0a      	ldr	r2, [pc, #40]	@ (8000868 <LoopForever+0x12>)
+  ldr r4, =_ebss
+ 8000840:	4c0a      	ldr	r4, [pc, #40]	@ (800086c <LoopForever+0x16>)
+  movs r3, #0
+ 8000842:	2300      	movs	r3, #0
+  b LoopFillZerobss
+ 8000844:	e001      	b.n	800084a <LoopFillZerobss>
+
+08000846 <FillZerobss>:
+
+FillZerobss:
+  str  r3, [r2]
+ 8000846:	6013      	str	r3, [r2, #0]
+  adds r2, r2, #4
+ 8000848:	3204      	adds	r2, #4
+
+0800084a <LoopFillZerobss>:
+
+LoopFillZerobss:
+  cmp r2, r4
+ 800084a:	42a2      	cmp	r2, r4
+  bcc FillZerobss
+ 800084c:	d3fb      	bcc.n	8000846 <FillZerobss>
+
+
+/* Call static constructors */
+  bl __libc_init_array
+ 800084e:	f000 f811 	bl	8000874 <__libc_init_array>
+/* Call the application's entry point.*/
+
+  bl main
+ 8000852:	f7ff fc8d 	bl	8000170 <main>
+
+08000856 <LoopForever>:
+
+LoopForever:
+  b LoopForever
+ 8000856:	e7fe      	b.n	8000856 <LoopForever>
+  ldr   r0, =_estack
+ 8000858:	20005000 	.word	0x20005000
+  ldr r0, =_sdata
+ 800085c:	20000000 	.word	0x20000000
+  ldr r1, =_edata
+ 8000860:	2000001c 	.word	0x2000001c
+  ldr r2, =_sidata
+ 8000864:	080008dc 	.word	0x080008dc
+  ldr r2, =_sbss
+ 8000868:	2000001c 	.word	0x2000001c
+  ldr r4, =_ebss
+ 800086c:	20000058 	.word	0x20000058
+
+08000870 <ADC1_2_IRQHandler>:
+ * @retval : None
+*/
+  .section .text.Default_Handler,"ax",%progbits
+Default_Handler:
+Infinite_Loop:
+  b Infinite_Loop
+ 8000870:	e7fe      	b.n	8000870 <ADC1_2_IRQHandler>
+	...
+
+08000874 <__libc_init_array>:
+ 8000874:	b570      	push	{r4, r5, r6, lr}
+ 8000876:	2600      	movs	r6, #0
+ 8000878:	4d0c      	ldr	r5, [pc, #48]	@ (80008ac <__libc_init_array+0x38>)
+ 800087a:	4b0d      	ldr	r3, [pc, #52]	@ (80008b0 <__libc_init_array+0x3c>)
+ 800087c:	1b5b      	subs	r3, r3, r5
+ 800087e:	109c      	asrs	r4, r3, #2
+ 8000880:	42a6      	cmp	r6, r4
+ 8000882:	d109      	bne.n	8000898 <__libc_init_array+0x24>
+ 8000884:	2600      	movs	r6, #0
+ 8000886:	f000 f819 	bl	80008bc <_init>
+ 800088a:	4d0a      	ldr	r5, [pc, #40]	@ (80008b4 <__libc_init_array+0x40>)
+ 800088c:	4b0a      	ldr	r3, [pc, #40]	@ (80008b8 <__libc_init_array+0x44>)
+ 800088e:	1b5b      	subs	r3, r3, r5
+ 8000890:	109c      	asrs	r4, r3, #2
+ 8000892:	42a6      	cmp	r6, r4
+ 8000894:	d105      	bne.n	80008a2 <__libc_init_array+0x2e>
+ 8000896:	bd70      	pop	{r4, r5, r6, pc}
+ 8000898:	f855 3b04 	ldr.w	r3, [r5], #4
+ 800089c:	4798      	blx	r3
+ 800089e:	3601      	adds	r6, #1
+ 80008a0:	e7ee      	b.n	8000880 <__libc_init_array+0xc>
+ 80008a2:	f855 3b04 	ldr.w	r3, [r5], #4
+ 80008a6:	4798      	blx	r3
+ 80008a8:	3601      	adds	r6, #1
+ 80008aa:	e7f2      	b.n	8000892 <__libc_init_array+0x1e>
+ 80008ac:	080008d4 	.word	0x080008d4
+ 80008b0:	080008d4 	.word	0x080008d4
+ 80008b4:	080008d4 	.word	0x080008d4
+ 80008b8:	080008d8 	.word	0x080008d8
+
+080008bc <_init>:
+ 80008bc:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 80008be:	bf00      	nop
+ 80008c0:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 80008c2:	bc08      	pop	{r3}
+ 80008c4:	469e      	mov	lr, r3
+ 80008c6:	4770      	bx	lr
+
+080008c8 <_fini>:
+ 80008c8:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 80008ca:	bf00      	nop
+ 80008cc:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 80008ce:	bc08      	pop	{r3}
+ 80008d0:	469e      	mov	lr, r3
+ 80008d2:	4770      	bx	lr
